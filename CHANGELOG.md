@@ -15,7 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 -->
 
-## 1.0.0 - 2019-09-11 - Lint, concatenate, minify
+## 1.0.0 - 2019-09-11 - Initial release
 
 ### Added
-- Setup linting, concatenation, and minification
+- Install Grunt
+- Configure Sass compilation
+- Configure JavaScript linting, concatenation, and minification
+- Configure file watching, serving, and live reloading
