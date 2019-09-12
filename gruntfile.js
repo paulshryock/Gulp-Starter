@@ -12,6 +12,7 @@ module.exports = function (grunt) {
 
     pkg: grunt.file.readJSON('package.json'),
 
+    // Compile Sass files
     sass: {
       dist: {
         files: {
@@ -66,8 +67,7 @@ module.exports = function (grunt) {
     // Run tasks whenever watched files change
     watch: {
       html: {
-        files: [defaults.html],
-        tasks: []
+        files: [defaults.html]
       },
       sass: {
         files: [defaults.sass],
@@ -76,6 +76,25 @@ module.exports = function (grunt) {
       js: {
         files: ['gruntfile.js', '<%= concat.dist.src %>'],
         tasks: ['standard', 'concat', 'uglify']
+      },
+      options: {
+        livereload: {
+          host: 'localhost',
+          post: 8000,
+          reload: true
+        }
+      }
+    },
+
+    // Serve files and live reload
+    connect: {
+      server: {
+        options: {
+          port: 8000,
+          hostname: 'localhost',
+          livereload: true,
+          keepalive: true
+        }
       }
     }
 
@@ -87,6 +106,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify')
   grunt.loadNpmTasks('grunt-contrib-sass')
   grunt.loadNpmTasks('grunt-contrib-watch')
+  grunt.loadNpmTasks('grunt-contrib-connect')
 
   grunt.registerTask('default', ['sass', 'standard', 'concat', 'uglify'])
 }
