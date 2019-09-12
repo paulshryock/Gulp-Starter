@@ -1,6 +1,6 @@
 # Grunt Starter
 
-Grunt configured with linting, concatenation, minification.
+Grunt configured with sass, linting, concatenation, minification, and watching.
 
 ## Quick Start
 

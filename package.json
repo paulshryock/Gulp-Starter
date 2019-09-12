@@ -1,7 +1,7 @@
 {
   "name": "Grunt-Starter",
   "version": "1.0.0",
-  "description": "Grunt configured with linting, concatenation, minification.",
+  "description": "Grunt configured with sass, linting, concatenation, minification, and watching.",
   "keywords": [],
   "license": "MIT",
   "author": {
@@ -10,13 +10,17 @@
     "url": "https://pshry.com/"
   },
   "scripts": {
-    "start": "grunt"
+    "start": "npm run build",
+    "build": "npx grunt",
+    "watch": "npx grunt watch"
   },
   "devDependencies": {
     "grunt": "^1.0.4",
     "grunt-contrib-concat": "^1.0.1",
     "grunt-contrib-jshint": "^2.1.0",
+    "grunt-contrib-sass": "^1.0.0",
     "grunt-contrib-uglify": "^4.0.1",
+    "grunt-contrib-watch": "^1.1.0",
     "grunt-standard": "^3.2.0"
   }
 }

@@ -1,6 +1,8 @@
 # Grunt tasks
 
-## Lint, Concatenate, and Minify JavaScript files
+## Default
+
+Compile Sass files, Lint, Concatenate, and Minify JavaScript files, and watch for changes:
 
 ```bash
 grunt
@@ -8,20 +10,50 @@ grunt
 
 You can also run individual tasks:
 
-## Lint JavaScript files:
+## Sass
+
+Compile Sass files:
 
 ```bash
-grunt lint
+grunt sass
 ```
 
-## Concatenate JavaScript files into `/dist/js/bundle.js`
+## JShint
+
+Lint JavaScript files (ES5):
 
 ```bash
-grunt concatenate
+grunt jshint
 ```
 
-## Minify `/dist/js/bundle.js` into `/dist/js/bundle.min.js`
+## Standard
+
+Lint JavaScript files (ES6):
 
 ```bash
-grunt minify
+grunt standard
+```
+
+## Concat
+
+Concatenate JavaScript files:
+
+```bash
+grunt concat
+```
+
+## Uglify
+
+Minify JavaScript files:
+
+```bash
+grunt uglify
+```
+
+## Watch
+
+Run tasks whenever watched files change:
+
+```bash
+grunt watch
 ```

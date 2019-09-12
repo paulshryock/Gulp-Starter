@@ -1,5 +1,6 @@
 module.exports = function (grunt) {
   var defaults = {
+    sass: 'src/sass/style.scss',
     js: [
       './src/js/index.js',
       './src/js/more.js'
@@ -10,7 +11,15 @@ module.exports = function (grunt) {
 
     pkg: grunt.file.readJSON('package.json'),
 
-    // Lint .js files with jshint
+    sass: {
+      dist: {
+        files: {
+          'dist/css/style.css': defaults.sass
+        }
+      }
+    },
+
+    // ES5: Lint .js files with jshint
     jshint: {
       files: ['gruntfile.js', '<%= concat.dist.src %>'],
       option: {
@@ -21,7 +30,7 @@ module.exports = function (grunt) {
       }
     },
 
-    // Lint .js files with standard
+    // ES6: Lint .js files with standard
     standard: {
       options: {
         fix: true
@@ -51,18 +60,28 @@ module.exports = function (grunt) {
           './dist/js/bundle.min.js': '<%= concat.dist.dest %>'
         }
       }
+    },
+
+    // Run tasks whenever watched files change
+    watch: {
+      sass: {
+        files: [defaults.sass],
+        tasks: ['sass']
+      },
+      js: {
+        files: ['gruntfile.js', '<%= concat.dist.src %>'],
+        tasks: ['standard', 'concat', 'uglify']
+      }
     }
 
   })
 
-  // grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-contrib-jshint')
   grunt.loadNpmTasks('grunt-standard')
   grunt.loadNpmTasks('grunt-contrib-concat')
   grunt.loadNpmTasks('grunt-contrib-uglify')
+  grunt.loadNpmTasks('grunt-contrib-sass')
+  grunt.loadNpmTasks('grunt-contrib-watch')
 
-  grunt.registerTask('default', ['lint', 'concatenate', 'minify'])
-  // grunt.registerTask('lint', ['jshint']);
-  grunt.registerTask('lint', ['standard'])
-  grunt.registerTask('concatenate', ['concat'])
-  grunt.registerTask('minify', ['uglify'])
+  grunt.registerTask('default', ['sass', 'standard', 'concat', 'uglify'])
 }
