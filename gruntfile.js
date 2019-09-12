@@ -1,6 +1,7 @@
 module.exports = function (grunt) {
   var defaults = {
-    sass: 'src/sass/style.scss',
+    html: './src/index.html',
+    sass: './src/sass/style.scss',
     js: [
       './src/js/index.js',
       './src/js/more.js'
@@ -64,6 +65,10 @@ module.exports = function (grunt) {
 
     // Run tasks whenever watched files change
     watch: {
+      html: {
+        files: [defaults.html],
+        tasks: []
+      },
       sass: {
         files: [defaults.sass],
         tasks: ['sass']
