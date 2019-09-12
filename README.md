@@ -22,10 +22,15 @@ npm i
 npm start
 ```
 
+## Documentation
+
+[Project documentation][docs] files are in the `_docs` directory.
+
 ## Contributing
 
 If you'd like to contribute, please read the [Code of Conduct][code-of-conduct] and [Contributing instructions][contributing], then fork the repository and use a feature branch. Pull requests are welcome.
 
 [node-download]: https://nodejs.org/en/download/
-[code-of-conduct]: blob/master/CODE_OF_CONDUCT.md
-[contributing]: blob/master/CONTRIBUTING.md
+[docs]: _docs/
+[code-of-conduct]: CODE_OF_CONDUCT.md
+[contributing]: CONTRIBUTING.md
