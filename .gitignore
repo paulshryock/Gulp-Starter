@@ -4,6 +4,7 @@ package-lock.json
 
 # Temp files
 dist/
+.sass-cache/
 
 # OS files
 .DS_Store
