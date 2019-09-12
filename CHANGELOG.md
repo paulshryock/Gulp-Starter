@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 -->
 
-## 1.0.0 - 2019-09-11 - Initial release
+## 1.0.0 - 2019-09-12 - Initial release
 
 ### Added
 - Install Grunt
