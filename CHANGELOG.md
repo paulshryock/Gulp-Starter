@@ -18,7 +18,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.0.0 - 2019-09-12 - Initial release
 
 ### Added
-- Install Grunt
-- Configure Sass compilation
-- Configure JavaScript linting, concatenation, and minification
-- Configure file watching, serving, and live reloading
+- [x] Install Gulp
+- [x] Install plugins
+- [ ] Configure Sass compilation
+- [ ] Configure JavaScript linting, concatenation, and minification
+- [ ] Configure file watching, serving, and live reloading

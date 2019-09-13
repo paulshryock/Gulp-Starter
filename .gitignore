@@ -3,6 +3,7 @@ node_modules/
 package-lock.json
 
 # Temp files
+build/
 dist/
 .sass-cache/
 

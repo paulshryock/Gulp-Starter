@@ -1,7 +1,7 @@
 {
-  "name": "Grunt-Starter",
+  "name": "Gulp-Starter",
   "version": "1.0.0",
-  "description": "Grunt configured with Sass compilation, JavaScript linting, concatenation, and minification, and file watching, serving, and live reloading.",
+  "description": "",
   "keywords": [],
   "license": "MIT",
   "author": {
@@ -9,20 +9,13 @@
     "email": "paul@pshry.com",
     "url": "https://pshry.com/"
   },
-  "scripts": {
-    "start": "npm run build",
-    "build": "npx grunt",
-    "watch": "npx grunt watch",
-    "serve": "npx grunt connect"
-  },
+  "scripts": {},
   "devDependencies": {
-    "grunt": "^1.0.4",
-    "grunt-contrib-concat": "^1.0.1",
-    "grunt-contrib-connect": "^2.1.0",
-    "grunt-contrib-jshint": "^2.1.0",
-    "grunt-contrib-sass": "^1.0.0",
-    "grunt-contrib-uglify": "^4.0.1",
-    "grunt-contrib-watch": "^1.1.0",
-    "grunt-standard": "^3.2.0"
+    "gulp": "^4.0.2",
+    "gulp-concat": "^2.6.1",
+    "gulp-connect": "^5.7.0",
+    "gulp-csso": "^3.0.1",
+    "gulp-sass": "^4.0.2",
+    "node-sass": "^4.12.0"
   }
 }
