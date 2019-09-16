@@ -1,18 +1,43 @@
-const { series, parallel } = require('gulp');
+const { src, dest, series, parallel } = require('gulp');
 
-function clean(cb) {
-  // body omitted
-  cb();
+function clean() {
+  const del = require('del');
+
+  return del([
+    'build/'
+  ]);
 }
 
-function cssTranspile(cb) {
-  // body omitted
-  cb();
+function cssLint() {
+  const gulpStylelint = require('gulp-stylelint');
+
+  return src('src/css/*.css')
+    .pipe(gulpStylelint({
+      config: {
+        extends: ['stylelint-config-standard'],
+      },
+      reporters: [
+        {formatter: 'string', console: true}
+      ]
+    }));
 }
 
-function cssMinify(cb) {
-  // body omitted
-  cb();
+function css() {
+  const postcss    = require('gulp-postcss')
+  const sourcemaps = require('gulp-sourcemaps')
+
+  return src('src/css/*.css')
+    .pipe( sourcemaps.init() )
+    .pipe( postcss([
+      require('postcss-easy-import'), // Inline @import rules content with extra features
+      require('precss'), // Use Sass-like markup in your CSS
+      require('postcss-node-sass'), // Parse styles with node-sass
+      require('postcss-preset-env'), // Convert modern CSS into something browsers understand
+      require('autoprefixer'), // Add vendor prefixes
+      require('cssnano') // Modern CSS compression
+      ]) )
+    .pipe( sourcemaps.write('.') )
+    .pipe( dest('./build/css') )
 }
 
 function jsTranspile(cb) {
@@ -38,9 +63,8 @@ function publish(cb) {
 exports.build = series(
   clean,
   parallel(
-    cssTranspile,
-    series(jsTranspile, jsBundle)
+    series(cssLint, css),
+    series(jsTranspile, jsBundle, jsMinify)
   ),
-  parallel(cssMinify, jsMinify),
   publish
 );
