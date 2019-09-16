@@ -15,11 +15,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 -->
 
-## 1.0.0 - 2019-09-12 - Initial release
+## 1.0.0 - 2019-09-16 - Initial release
 
 ### Added
-- [x] Install Gulp
-- [x] Install plugins
-- [x] Configure CSS linting, transpiling, and minification
-- [x] Configure JavaScript linting, concatenation, and minification
-- [x] Configure file watching, serving, and live reloading
+- Install Gulp, plugins, and dependencies
+- Configure HTML copying and minification
+- Configure CSS linting, processing, and minification with sourcemaps
+- Configure JavaScript linting, concatenation, and minification with sourcemaps
+- Configure file watching, serving, and live reloading
