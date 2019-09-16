@@ -1,6 +1,4 @@
-# Grunt Starter
-
-Grunt configured with Sass compilation, JavaScript linting, concatenation, and minification, and file watching, serving, and live reloading.
+# Gulp Starter
 
 ## Quick Start
 
@@ -20,8 +18,8 @@ Grunt configured with Sass compilation, JavaScript linting, concatenation, and m
 Fork or clone this repo, install dev dependencies, and start:
 
 ```bash
-git clone https://github.com/paulshryock/Grunt-Starter.git
-cd Grunt-Starter
+git clone https://github.com/paulshryock/Gulp-Starter.git
+cd Gulp-Starter
 npm i
 npm start
 ```
