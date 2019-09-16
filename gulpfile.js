@@ -1,6 +1,6 @@
-const { src, dest, series, parallel } = require('gulp');
-const sourcemaps = require('gulp-sourcemaps');
-const rename = require("gulp-rename");
+const { src, dest, series, parallel } = require('gulp')
+const sourcemaps = require('gulp-sourcemaps')
+const rename = require('gulp-rename')
 
 const defaults = {
   html: {
@@ -13,67 +13,71 @@ const defaults = {
   },
   js: {
     src: './src/js/**/*.js',
-    dest: './build/js'
-  },
+    dest: './build/js',
+    root: './*.js'
+
+  }
 }
 
-function clean() {
-  const del = require('del');
+function clean () {
+  const del = require('del')
 
   return del([
     'build/'
-  ]);
+  ])
 }
 
-function htmlBundle() {
+function htmlBundle () {
   return src(defaults.html.src)
     .pipe(dest(defaults.html.dest))
 }
 
-function cssLint() {
-  const gulpStylelint = require('gulp-stylelint');
+function cssLint () {
+  const gulpStylelint = require('gulp-stylelint')
 
   return src(defaults.css.src)
     .pipe(gulpStylelint({
       config: {
-        extends: ['stylelint-config-standard'],
+        extends: ['stylelint-config-standard']
       },
       reporters: [
-        {formatter: 'string', console: true}
+        { formatter: 'string', console: true }
       ]
-    }));
+    }))
 }
 
-function cssBundle() {
+function cssBundle () {
   const postcss = require('gulp-postcss')
 
   return src(defaults.css.src)
-    .pipe( sourcemaps.init() )
-    .pipe( postcss([
+    .pipe(sourcemaps.init())
+    .pipe(postcss([
       require('postcss-easy-import'), // Concatenate
       require('precss'), // Transpile Sass
       require('postcss-preset-env'), // Use modern CSS
       require('autoprefixer') // Add vendor prefixes
-      ]) )
-    .pipe( sourcemaps.write() )
-    .pipe( dest(defaults.css.dest) )
-    .pipe( postcss([
+    ]))
+    .pipe(sourcemaps.write())
+    .pipe(dest(defaults.css.dest))
+    .pipe(postcss([
       require('cssnano') // Minify
-      ]) )
+    ]))
     .pipe(rename({ suffix: '.min' }))
     .pipe(sourcemaps.write())
     .pipe(dest(defaults.css.dest))
 }
 
-/**
-  * Lint JS
-  */
-// function jsLint() {
-// }
+function jsLint () {
+  var standard = require('gulp-standard')
 
-function jsBundle() {
-  const concat = require('gulp-concat');
-  const uglify = require('gulp-uglify');
+  return src([defaults.js.src, defaults.js.root])
+    .pipe(standard({ fix: true }))
+    .pipe(standard.reporter('default'))
+}
+
+function jsBundle () {
+  const concat = require('gulp-concat')
+  const uglify = require('gulp-uglify')
 
   return src(defaults.js.src)
     .pipe(sourcemaps.init())
@@ -88,6 +92,6 @@ function jsBundle() {
 
 exports.build = series(
   clean,
-  parallel( htmlBundle, cssLint, /*jsLint*/ ),
-  parallel( cssBundle, jsBundle )
-);
+  parallel(htmlBundle, cssLint, jsLint),
+  parallel(cssBundle, jsBundle)
+)
