@@ -68,7 +68,7 @@ function cssBundle () {
 }
 
 function jsLint () {
-  var standard = require('gulp-standard')
+  const standard = require('gulp-standard')
 
   return src([defaults.js.src, defaults.js.root])
     .pipe(standard({ fix: true }))
