@@ -2,9 +2,6 @@ const { src, dest, series, parallel } = require('gulp');
 const sourcemaps = require('gulp-sourcemaps');
 const rename = require("gulp-rename");
 
-/**
-  * Clean files
-  */
 function clean() {
   const del = require('del');
 
@@ -13,17 +10,11 @@ function clean() {
   ]);
 }
 
-/**
-  * Bundle HTML
-  */
 function htmlBundle() {
   return src('./src/*.html')
     .pipe(dest('./build'))
 }
 
-/**
-  * Lint CSS
-  */
 function cssLint() {
   const gulpStylelint = require('gulp-stylelint');
 
@@ -38,9 +29,6 @@ function cssLint() {
     }));
 }
 
-/**
-  * Transpile, concatenate, and minify CSS
-  */
 function cssBundle() {
   const postcss = require('gulp-postcss')
 
@@ -52,7 +40,7 @@ function cssBundle() {
       require('postcss-preset-env'), // Use modern CSS
       require('autoprefixer') // Add vendor prefixes
       ]) )
-    // .pipe( sourcemaps.write('.') )
+    .pipe( sourcemaps.write() )
     .pipe( dest('./build/css') )
     .pipe( postcss([
       require('cssnano') // Minify
