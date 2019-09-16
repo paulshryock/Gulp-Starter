@@ -8,11 +8,11 @@ const defaults = {
     dest: './build'
   },
   css: {
-    src: 'src/css/*.css',
+    src: './src/css/*.css',
     dest: './build/css'
   },
   js: {
-    src: 'src/js/**/*.js',
+    src: './src/js/**/*.js',
     dest: './build/js'
   },
 }
