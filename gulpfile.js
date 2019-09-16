@@ -22,9 +22,7 @@ const defaults = {
 function clean () {
   const del = require('del')
 
-  return del([
-    'build/'
-  ])
+  return del([defaults.html.dest])
 }
 
 function htmlBundle () {

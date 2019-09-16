@@ -21,5 +21,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [x] Install Gulp
 - [x] Install plugins
 - [x] Configure CSS linting, transpiling, and minification
-- [ ] Configure JavaScript linting, concatenation, and minification
+- [x] Configure JavaScript linting, concatenation, and minification
 - [ ] Configure file watching, serving, and live reloading
