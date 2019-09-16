@@ -1,6 +1,7 @@
-const { src, dest, series, parallel } = require('gulp')
+const gulp = require('gulp')
 const sourcemaps = require('gulp-sourcemaps')
 const rename = require('gulp-rename')
+const connect = require('gulp-connect')
 
 const defaults = {
   html: {
@@ -8,7 +9,7 @@ const defaults = {
     dest: './build'
   },
   css: {
-    src: './src/css/*.css',
+    src: './src/css/**/*.css',
     dest: './build/css'
   },
   js: {
@@ -26,14 +27,15 @@ function clean () {
 }
 
 function htmlBundle () {
-  return src(defaults.html.src)
-    .pipe(dest(defaults.html.dest))
+  return gulp.src(defaults.html.src)
+    .pipe(gulp.dest(defaults.html.dest))
+    .pipe(connect.reload())
 }
 
 function cssLint () {
   const gulpStylelint = require('gulp-stylelint')
 
-  return src(defaults.css.src)
+  return gulp.src(defaults.css.src)
     .pipe(gulpStylelint({
       config: {
         extends: ['stylelint-config-standard']
@@ -47,7 +49,7 @@ function cssLint () {
 function cssBundle () {
   const postcss = require('gulp-postcss')
 
-  return src(defaults.css.src)
+  return gulp.src(defaults.css.src)
     .pipe(sourcemaps.init())
     .pipe(postcss([
       require('postcss-easy-import'), // Concatenate
@@ -56,19 +58,20 @@ function cssBundle () {
       require('autoprefixer') // Add vendor prefixes
     ]))
     .pipe(sourcemaps.write())
-    .pipe(dest(defaults.css.dest))
+    .pipe(gulp.dest(defaults.css.dest))
     .pipe(postcss([
       require('cssnano') // Minify
     ]))
     .pipe(rename({ suffix: '.min' }))
     .pipe(sourcemaps.write())
-    .pipe(dest(defaults.css.dest))
+    .pipe(gulp.dest(defaults.css.dest))
+    .pipe(connect.reload())
 }
 
 function jsLint () {
   const standard = require('gulp-standard')
 
-  return src([defaults.js.src, defaults.js.root])
+  return gulp.src([defaults.js.src, defaults.js.root])
     .pipe(standard({ fix: true }))
     .pipe(standard.reporter('default'))
 }
@@ -77,19 +80,42 @@ function jsBundle () {
   const concat = require('gulp-concat')
   const uglify = require('gulp-uglify')
 
-  return src(defaults.js.src)
+  return gulp.src(defaults.js.src)
     .pipe(sourcemaps.init())
     .pipe(concat('bundle.js')) // Concatenate
     .pipe(sourcemaps.write())
-    .pipe(dest(defaults.js.dest))
+    .pipe(gulp.dest(defaults.js.dest))
     .pipe(uglify()) // Minify
     .pipe(rename({ suffix: '.min' }))
     .pipe(sourcemaps.write())
-    .pipe(dest(defaults.js.dest))
+    .pipe(gulp.dest(defaults.js.dest))
+    .pipe(connect.reload())
 }
 
-exports.build = series(
+function serve () {
+  connect.server({
+    root: defaults.html.dest,
+    livereload: true
+  })
+}
+
+function watch () {
+  gulp.watch([defaults.html.src], gulp.series('htmlBundle'))
+  gulp.watch([defaults.css.src], gulp.series('cssBundle'))
+  gulp.watch([defaults.js.src, defaults.js.root], gulp.series('jsBundle'))
+}
+ 
+exports.htmlBundle = htmlBundle
+exports.cssBundle = cssBundle
+exports.jsBundle = jsBundle
+ 
+exports.build = gulp.series(
   clean,
-  parallel(htmlBundle, cssLint, jsLint),
-  parallel(cssBundle, jsBundle)
+  gulp.parallel(htmlBundle, cssLint, jsLint),
+  gulp.parallel(cssBundle, jsBundle)
+)
+
+exports.serve = gulp.series(
+  clean,
+  gulp.parallel(serve, watch)
 )
