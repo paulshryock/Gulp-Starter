@@ -1,5 +1,6 @@
 const { src, dest, series, parallel } = require('gulp');
-const sourcemaps = require('gulp-sourcemaps')
+const sourcemaps = require('gulp-sourcemaps');
+const rename = require("gulp-rename");
 
 /**
   * Clean files
@@ -49,11 +50,16 @@ function cssBundle() {
       require('postcss-easy-import'), // Concatenate
       require('precss'), // Transpile Sass
       require('postcss-preset-env'), // Use modern CSS
-      require('autoprefixer'), // Add vendor prefixes
+      require('autoprefixer') // Add vendor prefixes
+      ]) )
+    // .pipe( sourcemaps.write('.') )
+    .pipe( dest('./build/css') )
+    .pipe( postcss([
       require('cssnano') // Minify
       ]) )
-    .pipe( sourcemaps.write('.') )
-    .pipe( dest('./build/css') )
+    .pipe(rename({ suffix: '.min' }))
+    .pipe(sourcemaps.write())
+    .pipe(dest('./build/css'))
 }
 
 /**
@@ -65,7 +71,6 @@ function cssBundle() {
 function jsBundle() {
   const concat = require('gulp-concat');
   const uglify = require('gulp-uglify');
-  const rename = require("gulp-rename");
 
   return src('src/js/**/*.js')
     .pipe(sourcemaps.init())
