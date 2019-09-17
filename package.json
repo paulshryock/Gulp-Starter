@@ -12,8 +12,7 @@
   "scripts": {
     "start": "npm run build",
     "build": "npx gulp build",
-    "watch": "npx gulp watch",
-    "serve": "npx gulp connect"
+    "serve": "npx gulp serve"
   },
   "devDependencies": {
     "autoprefixer": "^9.6.1",

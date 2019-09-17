@@ -28,7 +28,7 @@ function clean () {
 
 function htmlBundle () {
   const htmlmin = require('gulp-htmlmin')
-  
+
   return gulp.src(defaults.html.src)
     .pipe(htmlmin({ collapseWhitespace: true }))
     .pipe(gulp.dest(defaults.html.dest))
@@ -107,11 +107,11 @@ function watch () {
   gulp.watch([defaults.css.src], gulp.series('cssBundle'))
   gulp.watch([defaults.js.src, defaults.js.root], gulp.series('jsBundle'))
 }
- 
+
 exports.htmlBundle = htmlBundle
 exports.cssBundle = cssBundle
 exports.jsBundle = jsBundle
- 
+
 exports.build = gulp.series(
   clean,
   gulp.parallel(cssLint, jsLint),
@@ -120,5 +120,6 @@ exports.build = gulp.series(
 
 exports.serve = gulp.series(
   clean,
+  gulp.parallel(cssLint, jsLint),
   gulp.parallel(serve, watch)
 )
