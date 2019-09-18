@@ -1,6 +1,6 @@
 # Gulp Starter
 
-Gulp configured with linting, transpiling, concatenation, minification, serving files, and watching for changes.
+Gulp configured with linting, Sass and modern CSS transpiling, concatenation, minification, source maps, serving files, watching for changes, and live reloading.
 
 ## Quick Start
 
