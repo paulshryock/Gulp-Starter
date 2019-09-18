@@ -18,8 +18,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.0.0 - 2019-09-16 - Initial release
 
 ### Added
-- Install Gulp, plugins, and dependencies
-- Configure HTML copying and minification
-- Configure CSS linting, processing, and minification with sourcemaps
-- Configure JavaScript linting, concatenation, and minification with sourcemaps
-- Configure file watching, serving, and live reloading
+- Add Gulp, plugins, and dependencies
+- Add CSS and JS linting
+- Add Sass and modern CSS transpiling
+- Add CSS and JS bundling
+- Add HTML, CSS, and JS minification
+- Add CSS and JS sourcemaps
+- Add file serving, watching, and live reloading
