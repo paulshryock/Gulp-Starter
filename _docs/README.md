@@ -21,6 +21,10 @@ Kicks off this workflow:
   - Copy to `/build`
 - CSS
   - Process CSS (`gulp-postcss`)
+    - Concatenate CSS (`postcss-easy-import`)
+    - Transpile Sass (`precss`)
+    - Transpile modern CSS (`postcss-preset-env`)
+    - Add vendor prefixes (`autoprefixer`)
   - Bundle and copy to `/build/css`
   - Minify CSS (`gulp-postcss`, `cssnano`)
   - Maintain Sourcemaps
@@ -35,7 +39,7 @@ Kicks off this workflow:
 gulp serve
 ```
 
-Runs the build workflow (minus cleaning and linting), then serves `/build` and watches for changes
+Runs the build workflow, serves `/build`, and watches for changes.
 
 ## npm scripts
 
