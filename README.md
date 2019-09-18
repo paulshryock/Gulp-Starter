@@ -1,26 +1,6 @@
 # Gulp Starter
 
-Gulp configured for the following workflow:
-
-- Clean `/build` directory
-- Lint
-  - Lint CSS (`gulp-stylelint`)
-    - Fix?
-  - Lint JS (`gulp-standard`)
-    - Fix (works?)
-- HTML
-  - Minify HTML (`gulp-htmlmin`)
-  - Copy to `/build`
-- CSS
-  - Process CSS (`gulp-postcss`)
-  - Bundle and copy to `/build/css`
-  - Minify CSS (`gulp-postcss`, `cssnano`)
-  - Maintain Sourcemaps
-- JS
-  - Bundle and copy to `/build/js`
-  - Minify JS (`uglify`)
-  - Maintain Sourcemaps
-- Serve `/build` and watch for changes
+Gulp configured with linting, transpiling, concatenation, minification, serving files, and watching for changes.
 
 ## Quick Start
 
