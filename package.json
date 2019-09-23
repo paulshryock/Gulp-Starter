@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Gulp configured with linting, Sass and modern CSS transpiling, concatenation, minification, source maps, serving files, watching for changes, and live reloading.",
   "keywords": [],
-  "license": "MIT",
+  "license": "Hippocratic License v1.0",
   "author": {
     "name": "Paul Shryock",
     "email": "paul@pshry.com",
