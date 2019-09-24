@@ -60,13 +60,13 @@ function cssBundle () {
       require('postcss-preset-env'), // Use modern CSS
       require('autoprefixer') // Add vendor prefixes
     ]))
-    .pipe(sourcemaps.write())
+    .pipe(sourcemaps.write()) // Maintain Sourcemaps
     .pipe(gulp.dest(defaults.css.dest))
     .pipe(postcss([
       require('cssnano') // Minify
     ]))
     .pipe(rename({ suffix: '.min' }))
-    .pipe(sourcemaps.write())
+    .pipe(sourcemaps.write()) // Maintain Sourcemaps
     .pipe(gulp.dest(defaults.css.dest))
     .pipe(connect.reload())
 }
@@ -86,11 +86,11 @@ function jsBundle () {
   return gulp.src(defaults.js.src)
     .pipe(sourcemaps.init())
     .pipe(concat('bundle.js')) // Concatenate
-    .pipe(sourcemaps.write())
+    .pipe(sourcemaps.write()) // Maintain Sourcemaps
     .pipe(gulp.dest(defaults.js.dest))
     .pipe(uglify()) // Minify
     .pipe(rename({ suffix: '.min' }))
-    .pipe(sourcemaps.write())
+    .pipe(sourcemaps.write()) // Maintain Sourcemaps
     .pipe(gulp.dest(defaults.js.dest))
     .pipe(connect.reload())
 }
