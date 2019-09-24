@@ -22,23 +22,24 @@ const defaults = {
 
 function clean () {
   const del = require('del')
+  const clean = del([defaults.html.dest])
 
-  return del([defaults.html.dest])
+  return clean
 }
 
 function htmlBundle () {
   const htmlmin = require('gulp-htmlmin')
-
-  return gulp.src(defaults.html.src)
+  const bundle = gulp.src(defaults.html.src)
     .pipe(htmlmin({ collapseWhitespace: true }))
     .pipe(gulp.dest(defaults.html.dest))
     .pipe(connect.reload())
+
+  return bundle
 }
 
 function cssLint () {
   const gulpStylelint = require('gulp-stylelint')
-
-  return gulp.src(defaults.css.src)
+  const lint = gulp.src(defaults.css.src)
     .pipe(gulpStylelint({
       config: {
         extends: ['stylelint-config-standard']
@@ -47,12 +48,13 @@ function cssLint () {
         { formatter: 'string', console: true }
       ]
     }))
+
+  return lint
 }
 
 function cssBundle () {
   const postcss = require('gulp-postcss')
-
-  return gulp.src(defaults.css.src)
+  const bundle = gulp.src(defaults.css.src)
     .pipe(sourcemaps.init())
     .pipe(postcss([
       require('postcss-easy-import'), // Concatenate
@@ -69,21 +71,23 @@ function cssBundle () {
     .pipe(sourcemaps.write()) // Maintain Sourcemaps
     .pipe(gulp.dest(defaults.css.dest))
     .pipe(connect.reload())
+
+  return bundle
 }
 
 function jsLint () {
   const standard = require('gulp-standard')
-
-  return gulp.src([defaults.js.src, defaults.js.root])
+  const lint = gulp.src([defaults.js.src, defaults.js.root])
     .pipe(standard({ fix: true }))
     .pipe(standard.reporter('default'))
+
+  return lint
 }
 
 function jsBundle () {
   const concat = require('gulp-concat')
   const uglify = require('gulp-uglify')
-
-  return gulp.src(defaults.js.src)
+  const bundle = gulp.src(defaults.js.src)
     .pipe(sourcemaps.init())
     .pipe(concat('bundle.js')) // Concatenate
     .pipe(sourcemaps.write()) // Maintain Sourcemaps
@@ -93,6 +97,8 @@ function jsBundle () {
     .pipe(sourcemaps.write()) // Maintain Sourcemaps
     .pipe(gulp.dest(defaults.js.dest))
     .pipe(connect.reload())
+
+  return bundle
 }
 
 function serve () {
@@ -121,5 +127,6 @@ exports.build = gulp.series(
 exports.serve = gulp.series(
   clean,
   gulp.parallel(cssLint, jsLint),
+  gulp.parallel(htmlBundle, cssBundle, jsBundle),
   gulp.parallel(serve, watch)
 )
