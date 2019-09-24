@@ -1,7 +1,10 @@
 const gulp = require('gulp')
+const gulpif = require('gulp-if')
+const beautify = require('gulp-beautify')
 const sourcemaps = require('gulp-sourcemaps')
 const rename = require('gulp-rename')
 const connect = require('gulp-connect')
+const isProduction = process.env.NODE_ENV === 'production'
 
 const defaults = {
   html: {
@@ -30,7 +33,7 @@ function clean () {
 function htmlBundle () {
   const htmlmin = require('gulp-htmlmin')
   const bundle = gulp.src(defaults.html.src)
-    .pipe(htmlmin({ collapseWhitespace: true }))
+    .pipe(gulpif(isProduction, htmlmin({ collapseWhitespace: true }), beautify.html({ indent_size: 2 })))
     .pipe(gulp.dest(defaults.html.dest))
     .pipe(connect.reload())
 
@@ -64,11 +67,11 @@ function cssBundle () {
     ]))
     .pipe(sourcemaps.write()) // Maintain Sourcemaps
     .pipe(gulp.dest(defaults.css.dest))
-    .pipe(postcss([
-      require('cssnano') // Minify
-    ]))
-    .pipe(rename({ suffix: '.min' }))
-    .pipe(sourcemaps.write()) // Maintain Sourcemaps
+    .pipe(gulpif(isProduction, postcss([
+      require('cssnano')
+    ]), beautify.css({ indent_size: 2 }))) // Minify or Beautify
+    .pipe(gulpif(isProduction, rename({ suffix: '.min' })))
+    .pipe(gulpif(isProduction, sourcemaps.write())) // Maintain Sourcemaps
     .pipe(gulp.dest(defaults.css.dest))
     .pipe(connect.reload())
 
@@ -92,9 +95,9 @@ function jsBundle () {
     .pipe(concat('bundle.js')) // Concatenate
     .pipe(sourcemaps.write()) // Maintain Sourcemaps
     .pipe(gulp.dest(defaults.js.dest))
-    .pipe(uglify()) // Minify
-    .pipe(rename({ suffix: '.min' }))
-    .pipe(sourcemaps.write()) // Maintain Sourcemaps
+    .pipe(gulpif(isProduction, uglify(), beautify({ indent_size: 2 }))) // Minify or Beautify
+    .pipe(gulpif(isProduction, rename({ suffix: '.min' })))
+    .pipe(gulpif(isProduction, sourcemaps.write())) // Maintain Sourcemaps
     .pipe(gulp.dest(defaults.js.dest))
     .pipe(connect.reload())
 

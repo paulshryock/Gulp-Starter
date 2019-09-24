@@ -1,6 +1,8 @@
 # Gulp Starter
 
-Gulp configured with linting, Sass and modern CSS transpiling, concatenation, minification, source maps, serving files, watching for changes, and live reloading.
+Fork this repository to start a new project with Gulp and the following workflow: linting, Sass and modern CSS transpiling, concatenation, minification, beautification, source maps, serving files, watching for changes, and live reloading.
+
+This is an open source project which uses the [The Hippocratic License][license].
 
 ## Quick Start
 
@@ -34,6 +36,7 @@ npm start
 
 If you'd like to contribute, please read the [Code of Conduct][code-of-conduct] and [Contributing instructions][contributing], then fork the repository and use a feature branch. Pull requests are welcome.
 
+[license]: https://firstdonoharm.dev/
 [node-download]: https://nodejs.org/en/download/
 [ruby-download]: https://www.ruby-lang.org/en/downloads/
 [docs]: _docs/

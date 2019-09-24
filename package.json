@@ -1,8 +1,13 @@
 {
   "name": "Gulp-Starter",
   "version": "1.0.0",
-  "description": "Gulp configured with linting, Sass and modern CSS transpiling, concatenation, minification, source maps, serving files, watching for changes, and live reloading.",
-  "keywords": [],
+  "description": "Fork this repository to start a new project with Gulp and the following workflow: linting, Sass and modern CSS transpiling, concatenation, minification, source maps, serving files, watching for changes, and live reloading.",
+  "keywords": [
+    "gulp",
+    "starter",
+    "build",
+    "tool"
+  ],
   "license": "Hippocratic License v1.0",
   "author": {
     "name": "Paul Shryock",
@@ -19,9 +24,11 @@
     "cssnano": "^4.1.10",
     "del": "^5.1.0",
     "gulp": "^4.0.2",
+    "gulp-beautify": "^3.0.0",
     "gulp-concat": "^2.6.1",
     "gulp-connect": "^5.7.0",
     "gulp-htmlmin": "^5.0.1",
+    "gulp-if": "^3.0.0",
     "gulp-postcss": "^8.0.0",
     "gulp-rename": "^1.4.0",
     "gulp-sourcemaps": "^2.6.5",
