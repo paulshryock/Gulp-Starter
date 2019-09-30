@@ -39,6 +39,7 @@
     "gulp-standard": "^14.0.0",
     "gulp-stylelint": "^9.0.0",
     "gulp-uglify": "^3.0.2",
+    "pixrem": "^5.0.0",
     "postcss-easy-import": "^3.0.0",
     "postcss-preset-env": "^6.7.0",
     "precss": "^4.0.0",

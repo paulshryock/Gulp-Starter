@@ -87,7 +87,8 @@ function cssBundle () {
       require('postcss-easy-import'), // @import files
       require('precss'), // Transpile Sass-like syntax
       require('postcss-preset-env'), // Polyfill modern CSS
-      require('autoprefixer') // Add vendor prefixes
+      require('autoprefixer'), // Add vendor prefixes
+      require('pixrem')() // Add fallbacks for rem units
     ]))
     .pipe(concat('bundle.css')) // Concatenate and rename
     .pipe(beautify.css({ indent_size: 2 })) // Beautify
