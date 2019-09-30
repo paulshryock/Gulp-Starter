@@ -12,7 +12,7 @@ const defaults = {
     dest: './build'
   },
   css: {
-    src: './src/_assets/css/**/*.css',
+    src: './src/_assets/css/style.css',
     dest: './build/css'
   },
   js: {
