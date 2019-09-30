@@ -24,6 +24,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add ES2015+ compiling
 - Add CSS and JS concatenation
 - Add HTML, CSS, and JS minification
-- Add JS beautification
+- Add CSS and JS beautification
 - Add CSS and JS source maps
 - Add file serving, watching for changes, and live reloading
