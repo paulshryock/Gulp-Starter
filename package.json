@@ -16,9 +16,8 @@
   },
   "scripts": {
     "start": "npm run build",
-    "develop": "npm run build:development",
-    "build:development": "NODE_ENV='development' npx gulp build",
     "build": "NODE_ENV='production' npx gulp build",
+    "develop": "NODE_ENV='development' npx gulp develop",
     "serve": "NODE_ENV='development' npx gulp serve"
   },
   "devDependencies": {

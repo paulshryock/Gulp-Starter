@@ -1,5 +1,7 @@
 const gulp = require('gulp')
+const del = require('del')
 const gulpif = require('gulp-if')
+const concat = require('gulp-concat')
 const beautify = require('gulp-beautify')
 const sourcemaps = require('gulp-sourcemaps')
 const rename = require('gulp-rename')
@@ -13,19 +15,37 @@ const defaults = {
   },
   css: {
     src: './src/_assets/css/style.css',
-    dest: './build/css'
+    dest: './build/css',
+    bundle: './build/css/bundle.css'
   },
   js: {
+    root: './*.js',
     src: './src/_assets/js/**/*.js',
     dest: './build/js',
-    root: './*.js'
-
+    bundle: './build/js/bundle.js'
+  },
+  fonts: {
+    src: './src/_assets/fonts/**/*',
+    dest: './build/fonts'
+  },
+  images: {
+    src: './src/_assets/img/**/*',
+    dest: './build/img'
+  },
+  favicon: {
+    src: './src/_assets/favicon/**/*',
+    dest: './build'
   }
 }
 
-function clean () {
-  const del = require('del')
+function cleanBuild () {
   const clean = del([defaults.html.dest])
+
+  return clean
+}
+
+function cleanBundles (asset) {
+  const clean = del([defaults.css.bundle, defaults.js.bundle])
 
   return clean
 }
@@ -66,6 +86,7 @@ function cssBundle () {
       require('autoprefixer') // Vendor prefixes
     ]))
     .pipe(sourcemaps.write()) // Maintain Sourcemaps
+    .pipe(concat('bundle.css')) // Concatenate and rename
     .pipe(gulp.dest(defaults.css.dest))
     .pipe(gulpif(isProduction, postcss([
       require('cssnano')
@@ -88,17 +109,40 @@ function jsLint () {
 }
 
 function jsBundle () {
-  const concat = require('gulp-concat')
   const uglify = require('gulp-uglify')
   const bundle = gulp.src(defaults.js.src)
     .pipe(sourcemaps.init())
-    .pipe(concat('bundle.js')) // Concatenate
+    .pipe(concat('bundle.js')) // Concatenate and rename
     .pipe(sourcemaps.write()) // Maintain Sourcemaps
     .pipe(gulp.dest(defaults.js.dest))
     .pipe(gulpif(isProduction, uglify(), beautify({ indent_size: 2 }))) // Minify or Beautify
     .pipe(gulpif(isProduction, rename({ suffix: '.min' })))
     .pipe(gulpif(isProduction, sourcemaps.write())) // Maintain Sourcemaps
     .pipe(gulp.dest(defaults.js.dest))
+    .pipe(connect.reload())
+
+  return bundle
+}
+
+function fontsBundle () {
+  const bundle = gulp.src(defaults.fonts.src)
+    .pipe(gulp.dest(defaults.fonts.dest))
+    .pipe(connect.reload())
+
+  return bundle
+}
+
+function imagesBundle () {
+  const bundle = gulp.src(defaults.images.src)
+    .pipe(gulp.dest(defaults.images.dest))
+    .pipe(connect.reload())
+
+  return bundle
+}
+
+function faviconBundle () {
+  const bundle = gulp.src(defaults.favicon.src)
+    .pipe(gulp.dest(defaults.favicon.dest))
     .pipe(connect.reload())
 
   return bundle
@@ -112,24 +156,31 @@ function serve () {
 }
 
 function watch () {
-  gulp.watch([defaults.html.src], gulp.series('htmlBundle'))
-  gulp.watch([defaults.css.src], gulp.series('cssBundle'))
-  gulp.watch([defaults.js.src, defaults.js.root], gulp.series('jsBundle'))
+  gulp.watch([defaults.html.src], htmlBundle)
+  gulp.watch([defaults.css.src], cssBundle)
+  gulp.watch([defaults.js.src, defaults.js.root], jsBundle)
 }
 
-exports.htmlBundle = htmlBundle
-exports.cssBundle = cssBundle
-exports.jsBundle = jsBundle
+/**
+ * Gulp tasks
+ */
 
 exports.build = gulp.series(
-  clean,
+  cleanBuild,
   gulp.parallel(cssLint, jsLint),
-  gulp.parallel(htmlBundle, cssBundle, jsBundle)
+  gulp.parallel(htmlBundle, cssBundle, jsBundle, fontsBundle, imagesBundle, faviconBundle),
+  cleanBundles
+)
+
+exports.develop = gulp.series(
+  cleanBuild,
+  gulp.parallel(cssLint, jsLint),
+  gulp.parallel(htmlBundle, cssBundle, jsBundle, fontsBundle, imagesBundle, faviconBundle)
 )
 
 exports.serve = gulp.series(
-  clean,
+  cleanBuild,
   gulp.parallel(cssLint, jsLint),
-  gulp.parallel(htmlBundle, cssBundle, jsBundle),
+  gulp.parallel(htmlBundle, cssBundle, jsBundle, fontsBundle, imagesBundle, faviconBundle),
   gulp.parallel(serve, watch)
 )
