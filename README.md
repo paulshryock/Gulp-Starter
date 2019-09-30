@@ -12,10 +12,6 @@ This is an open source project which uses the [The Hippocratic License][license]
   - Check if Node is installed: `node --version`
   - If you see a version number, such as `v11.6.0`, proceed to [Get Started](#get-started)
   - If Node isn't installed, [download][node-download] and install it, then proceed to [Get Started](#get-started)
-2. Ruby
-  - Check if Ruby is installed: `ruby --version`
-  - If you see a version number, such as `ruby 2.2.3`, proceed to [Get Started](#get-started)
-  - If Ruby isn't installed, [download][ruby-download] and install it, then proceed to [Get Started](#get-started)
 
 ### Get Started
 
