@@ -16,8 +16,10 @@
   },
   "scripts": {
     "start": "npm run build",
-    "build": "npx gulp build",
-    "serve": "npx gulp serve"
+    "develop": "npm run build:development",
+    "build:development": "NODE_ENV='development' npx gulp build",
+    "build": "NODE_ENV='production' npx gulp build",
+    "serve": "NODE_ENV='development' npx gulp serve"
   },
   "devDependencies": {
     "autoprefixer": "^9.6.1",

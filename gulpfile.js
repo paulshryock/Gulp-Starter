@@ -12,11 +12,11 @@ const defaults = {
     dest: './build'
   },
   css: {
-    src: './src/css/**/*.css',
+    src: './src/_assets/css/**/*.css',
     dest: './build/css'
   },
   js: {
-    src: './src/js/**/*.js',
+    src: './src/_assets/js/**/*.js',
     dest: './build/js',
     root: './*.js'
 
