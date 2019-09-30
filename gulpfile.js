@@ -1,7 +1,6 @@
 const gulp = require('gulp')
 const del = require('del')
 const gulpif = require('gulp-if')
-const sourcemaps = require('gulp-sourcemaps')
 const babel = require('gulp-babel')
 const concat = require('gulp-concat')
 const beautify = require('gulp-beautify')
@@ -79,8 +78,9 @@ function cssLint () {
 }
 
 function cssBundle () {
+  const sourcemaps = require('gulp-sourcemaps')
   const postcss = require('gulp-postcss')
-  const bundle = gulp.src(defaults.css.src)
+  const bundle = gulp.src(defaults.css.src, { sourcemaps: true })
     .pipe(sourcemaps.init())
     .pipe(postcss([
       require('postcss-easy-import'), // @import files
@@ -88,15 +88,14 @@ function cssBundle () {
       require('postcss-preset-env'), // Polyfill modern CSS
       require('autoprefixer') // Add vendor prefixes
     ]))
-    .pipe(sourcemaps.write()) // Maintain Sourcemaps
     .pipe(concat('bundle.css')) // Concatenate and rename
-    .pipe(gulp.dest(defaults.css.dest))
+    .pipe(gulp.dest(defaults.css.dest), { sourcemaps: true })
     .pipe(gulpif(isProduction, postcss([
       require('cssnano')
     ]), beautify.css({ indent_size: 2 }))) // Minify or Beautify
     .pipe(gulpif(isProduction, rename({ suffix: '.min' })))
-    .pipe(gulpif(isProduction, sourcemaps.write())) // Maintain Sourcemaps
-    .pipe(gulp.dest(defaults.css.dest))
+    .pipe(sourcemaps.write())
+    .pipe(gulp.dest(defaults.css.dest), { sourcemaps: true })
     .pipe(connect.reload())
 
   return bundle
@@ -113,16 +112,13 @@ function jsLint () {
 
 function jsBundle () {
   const uglify = require('gulp-uglify')
-  const bundle = gulp.src(defaults.js.src)
-    .pipe(sourcemaps.init())
+  const bundle = gulp.src(defaults.js.src, { sourcemaps: true })
     .pipe(babel()) // Compile ECMAScript 2015+ into a backwards compatible version of JavaScript
     .pipe(concat('bundle.js')) // Concatenate and rename
-    .pipe(sourcemaps.write()) // Maintain Sourcemaps
-    .pipe(gulp.dest(defaults.js.dest))
+    .pipe(gulp.dest(defaults.js.dest, { sourcemaps: true }))
     .pipe(gulpif(isProduction, uglify(), beautify({ indent_size: 2 }))) // Minify or Beautify
     .pipe(gulpif(isProduction, rename({ suffix: '.min' })))
-    .pipe(gulpif(isProduction, sourcemaps.write())) // Maintain Sourcemaps
-    .pipe(gulp.dest(defaults.js.dest))
+    .pipe(gulp.dest(defaults.js.dest, { sourcemaps: true }))
     .pipe(connect.reload())
 
   return bundle
