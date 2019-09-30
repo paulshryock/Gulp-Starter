@@ -69,6 +69,7 @@ function cssLint () {
       config: {
         extends: ['stylelint-config-standard']
       },
+      fix: true,
       reporters: [
         { formatter: 'string', console: true }
       ]
@@ -114,7 +115,7 @@ function jsBundle () {
   const uglify = require('gulp-uglify')
   const bundle = gulp.src(defaults.js.src)
     .pipe(sourcemaps.init())
-    .pipe(babel()), // Compile ECMAScript 2015+ into a backwards compatible version of JavaScript
+    .pipe(babel()) // Compile ECMAScript 2015+ into a backwards compatible version of JavaScript
     .pipe(concat('bundle.js')) // Concatenate and rename
     .pipe(sourcemaps.write()) // Maintain Sourcemaps
     .pipe(gulp.dest(defaults.js.dest))
