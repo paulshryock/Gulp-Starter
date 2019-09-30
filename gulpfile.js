@@ -60,10 +60,10 @@ function cssBundle () {
   const bundle = gulp.src(defaults.css.src)
     .pipe(sourcemaps.init())
     .pipe(postcss([
-      require('postcss-easy-import'), // Concatenate
-      require('precss'), // Transpile Sass
-      require('postcss-preset-env'), // Use modern CSS
-      require('autoprefixer') // Add vendor prefixes
+      require('postcss-easy-import'), // @import files
+      require('precss'), // Transpile Sass-like syntax
+      require('postcss-preset-env'), // Polyfill modern CSS
+      require('autoprefixer') // Vendor prefixes
     ]))
     .pipe(sourcemaps.write()) // Maintain Sourcemaps
     .pipe(gulp.dest(defaults.css.dest))
