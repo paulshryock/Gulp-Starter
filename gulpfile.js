@@ -54,7 +54,7 @@ function cleanBundles (asset) {
 function htmlBundle () {
   const htmlmin = require('gulp-htmlmin')
   const bundle = gulp.src(defaults.html.src)
-    .pipe(gulpif(isProduction, htmlmin({ collapseWhitespace: true }), beautify.html({ indent_size: 2 })))
+    .pipe(gulpif(isProduction, htmlmin({ collapseWhitespace: true }), beautify.html({ indent_size: 2 }))) // Minify or Beautify
     .pipe(gulp.dest(defaults.html.dest))
     .pipe(connect.reload())
 
@@ -78,6 +78,7 @@ function cssLint () {
 }
 
 function cssBundle () {
+  // Using gulp-sourcemaps with native Gulp sourcemaps because PostCSS plugin cssnano seems to require gulp-sourcemaps in order to keep sourcemaps in the minified file.
   const sourcemaps = require('gulp-sourcemaps')
   const postcss = require('gulp-postcss')
   const bundle = gulp.src(defaults.css.src, { sourcemaps: true })
