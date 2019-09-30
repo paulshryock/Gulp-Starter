@@ -166,6 +166,13 @@ function watch () {
  * Gulp tasks
  */
 
+exports.default = gulp.series(
+  cleanBuild,
+  gulp.parallel(cssLint, jsLint),
+  gulp.parallel(htmlBundle, cssBundle, jsBundle, fontsBundle, imagesBundle, faviconBundle),
+  cleanBundles
+)
+
 exports.build = gulp.series(
   cleanBuild,
   gulp.parallel(cssLint, jsLint),
