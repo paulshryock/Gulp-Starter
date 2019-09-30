@@ -1,7 +1,7 @@
 /**
   * index.js
   */
-function index () {
+const index = () => {
   console.log('index.js')
 }
 

@@ -90,10 +90,11 @@ function cssBundle () {
       require('autoprefixer') // Add vendor prefixes
     ]))
     .pipe(concat('bundle.css')) // Concatenate and rename
+    .pipe(beautify.css({ indent_size: 2 })) // Beautify
     .pipe(gulp.dest(defaults.css.dest), { sourcemaps: true })
     .pipe(gulpif(isProduction, postcss([
       require('cssnano')
-    ]), beautify.css({ indent_size: 2 }))) // Minify or Beautify
+    ]))) // Minify
     .pipe(gulpif(isProduction, rename({ suffix: '.min' })))
     .pipe(sourcemaps.write())
     .pipe(gulp.dest(defaults.css.dest), { sourcemaps: true })
@@ -114,10 +115,11 @@ function jsLint () {
 function jsBundle () {
   const uglify = require('gulp-uglify')
   const bundle = gulp.src(defaults.js.src, { sourcemaps: true })
-    .pipe(babel()) // Compile ECMAScript 2015+ into a backwards compatible version of JavaScript
     .pipe(concat('bundle.js')) // Concatenate and rename
+    .pipe(babel()) // Compile ECMAScript 2015+ into a backwards compatible version of JavaScript
+    .pipe(beautify({ indent_size: 2 })) // Beautify
     .pipe(gulp.dest(defaults.js.dest, { sourcemaps: true }))
-    .pipe(gulpif(isProduction, uglify(), beautify({ indent_size: 2 }))) // Minify or Beautify
+    .pipe(gulpif(isProduction, uglify())) // Minify
     .pipe(gulpif(isProduction, rename({ suffix: '.min' })))
     .pipe(gulp.dest(defaults.js.dest, { sourcemaps: true }))
     .pipe(connect.reload())

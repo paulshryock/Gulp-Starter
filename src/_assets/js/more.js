@@ -1,7 +1,7 @@
 /**
   * more.js
   */
-function more () {
+const more = () => {
   console.log('more.js')
 }
 
