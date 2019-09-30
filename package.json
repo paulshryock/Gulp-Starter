@@ -21,10 +21,13 @@
     "serve": "NODE_ENV='development' npx gulp serve"
   },
   "devDependencies": {
+    "@babel/core": "^7.6.2",
+    "@babel/preset-env": "^7.6.2",
     "autoprefixer": "^9.6.1",
     "cssnano": "^4.1.10",
     "del": "^5.1.0",
     "gulp": "^4.0.2",
+    "gulp-babel": "^8.0.0-beta.2",
     "gulp-beautify": "^3.0.0",
     "gulp-concat": "^2.6.1",
     "gulp-connect": "^5.7.0",

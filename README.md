@@ -1,6 +1,6 @@
 # Gulp Starter
 
-Fork this repository to start a new project with Gulp and the following workflow: linting, Sass and modern CSS transpiling, concatenation, minification, beautification, source maps, serving files, watching for changes, and live reloading.
+Fork this repository to start a new project with Gulp and the following workflow: linting, Sass and modern CSS transpiling, ES2015+ compiling, concatenation, minification, beautification, source maps, serving files, watching for changes, and live reloading.
 
 This is an open source project which uses the [The Hippocratic License][license].
 

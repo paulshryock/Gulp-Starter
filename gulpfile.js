@@ -1,11 +1,13 @@
 const gulp = require('gulp')
 const del = require('del')
 const gulpif = require('gulp-if')
+const sourcemaps = require('gulp-sourcemaps')
+const babel = require('gulp-babel')
 const concat = require('gulp-concat')
 const beautify = require('gulp-beautify')
-const sourcemaps = require('gulp-sourcemaps')
 const rename = require('gulp-rename')
 const connect = require('gulp-connect')
+
 const isProduction = process.env.NODE_ENV === 'production'
 
 const defaults = {
@@ -112,6 +114,7 @@ function jsBundle () {
   const uglify = require('gulp-uglify')
   const bundle = gulp.src(defaults.js.src)
     .pipe(sourcemaps.init())
+    .pipe(babel()), // Compile ECMAScript 2015+ into a backwards compatible version of JavaScript
     .pipe(concat('bundle.js')) // Concatenate and rename
     .pipe(sourcemaps.write()) // Maintain Sourcemaps
     .pipe(gulp.dest(defaults.js.dest))

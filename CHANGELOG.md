@@ -21,7 +21,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add Gulp, plugins, and dependencies
 - Add CSS and JS linting
 - Add Sass and modern CSS transpiling
-- Add CSS and JS bundling
+- Add ES2015+ compiling
+- Add CSS and JS concatenation
 - Add HTML, CSS, and JS minification
-- Add CSS and JS sourcemaps
-- Add file serving, watching, and live reloading
+- Add JS beautification
+- Add CSS and JS source maps
+- Add file serving, watching for changes, and live reloading
