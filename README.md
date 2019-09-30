@@ -24,7 +24,7 @@ npm i
 npm start
 ```
 
-Then find and replace the package name (`Gulp-Starter`) and author name (`Paul Shryock`) in `[LICENSE][license]`, `[package.json][pkg]`, and `README.md`.
+Then find and replace the package name (`Gulp-Starter`) and author name (`Paul Shryock`) in [`LICENSE`][license], [`package.json`][pkg], and `README.md`.
 
 ## Documentation
 
