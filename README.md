@@ -24,6 +24,8 @@ npm i
 npm start
 ```
 
+Then find and replace the package name (`Gulp-Starter`) and author name (`Paul Shryock`) in `[LICENSE][license]`, `[package.json][pkg]`, and `README.md`.
+
 ## Documentation
 
 [Project documentation][docs] files are in the `_docs` directory.
@@ -35,6 +37,7 @@ If you'd like to contribute, please read the [Code of Conduct][code-of-conduct] 
 [license]: https://firstdonoharm.dev/
 [node-download]: https://nodejs.org/en/download/
 [ruby-download]: https://www.ruby-lang.org/en/downloads/
+[pkg]: package.json
 [docs]: _docs/
 [code-of-conduct]: CODE_OF_CONDUCT.md
 [contributing]: CONTRIBUTING.md
