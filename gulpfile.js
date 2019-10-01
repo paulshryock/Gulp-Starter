@@ -1,30 +1,29 @@
 const gulp = require('gulp')
 const del = require('del')
-const gulpif = require('gulp-if')
 const sourcemaps = require('gulp-sourcemaps')
+const postcss = require('gulp-postcss')
 const babel = require('gulp-babel')
 const concat = require('gulp-concat')
 const beautify = require('gulp-beautify')
 const rename = require('gulp-rename')
 const connect = require('gulp-connect')
 
-const isProduction = process.env.NODE_ENV === 'production'
-
 const defaults = {
   html: {
     src: './src/*.html',
-    dest: './build'
+    dest: './build',
+    output: './build/**/*.html'
   },
   css: {
     src: './src/_assets/css/style.css',
     dest: './build/css',
-    bundle: './build/css/bundle.css'
+    output: './build/css/bundle.css'
   },
   js: {
     root: './*.js',
     src: './src/_assets/js/**/*.js',
     dest: './build/js',
-    bundle: './build/js/bundle.js'
+    output: './build/js/bundle.js'
   },
   fonts: {
     src: './src/_assets/fonts/**/*',
@@ -47,22 +46,31 @@ function cleanBuild () {
 }
 
 function cleanBundles () {
-  const clean = del([defaults.css.bundle, `${defaults.css.bundle}.map`, defaults.js.bundle, `${defaults.js.bundle}.map`])
+  const clean = del([defaults.css.output, `${defaults.css.output}.map`, defaults.js.output, `${defaults.js.output}.map`])
 
   return clean
 }
 
-function htmlBundle () {
-  const htmlmin = require('gulp-htmlmin')
+function buildHtml () {
   const bundle = gulp.src(defaults.html.src)
-    .pipe(gulpif(isProduction, htmlmin({ collapseWhitespace: true }), beautify.html({ indent_size: 2 }))) // Minify or Beautify
+    .pipe(beautify.html({ indent_size: 2 })) // Beautify
     .pipe(gulp.dest(defaults.html.dest))
     .pipe(connect.reload())
 
   return bundle
 }
 
-function cssLint () {
+function minifyHtml () {
+  const htmlmin = require('gulp-htmlmin')
+  const bundle = gulp.src(defaults.html.output)
+    .pipe(htmlmin({ collapseWhitespace: true })) // Minify
+    .pipe(gulp.dest(defaults.html.dest))
+    .pipe(connect.reload())
+
+  return bundle
+}
+
+function lintCss () {
   const gulpStylelint = require('gulp-stylelint')
   const lint = gulp.src(defaults.css.src)
     .pipe(gulpStylelint({
@@ -78,8 +86,7 @@ function cssLint () {
   return lint
 }
 
-function cssBundle () {
-  const postcss = require('gulp-postcss')
+function buildCss () {
   const bundle = gulp.src(defaults.css.src)
     .pipe(sourcemaps.init())
     .pipe(postcss([
@@ -91,20 +98,26 @@ function cssBundle () {
     ]))
     .pipe(concat('bundle.css')) // Concatenate and rename
     .pipe(beautify.css({ indent_size: 2 })) // Beautify
-    .pipe(sourcemaps.write('.'))
-    .pipe(gulp.dest(defaults.css.dest))
-    .pipe(gulpif(isProduction, postcss([
-      require('cssnano')
-    ]))) // Minify
-    .pipe(gulpif(isProduction, rename({ suffix: '.min' })))
-    // .pipe(sourcemaps.write('.'))
+    .pipe(sourcemaps.write('.')) // Maintain Sourcemaps
     .pipe(gulp.dest(defaults.css.dest))
     .pipe(connect.reload())
 
   return bundle
 }
 
-function jsLint () {
+function minifyCss () {
+  const bundle = gulp.src(defaults.css.output)
+    .pipe(sourcemaps.init())
+    .pipe(postcss([ require('cssnano') ])) // Minify
+    .pipe(rename({ suffix: '.min' })) // Rename
+    .pipe(sourcemaps.write('.')) // Maintain Sourcemaps
+    .pipe(gulp.dest(defaults.css.dest))
+    .pipe(connect.reload())
+
+  return bundle
+}
+
+function lintJs () {
   const standard = require('gulp-standard')
   const lint = gulp.src([defaults.js.src, defaults.js.root])
     .pipe(standard({ fix: true }))
@@ -113,8 +126,7 @@ function jsLint () {
   return lint
 }
 
-function jsBundle () {
-  const uglify = require('gulp-uglify')
+function buildJs () {
   const bundle = gulp.src(defaults.js.src)
     .pipe(sourcemaps.init())
     .pipe(concat('bundle.js')) // Concatenate and rename
@@ -122,9 +134,18 @@ function jsBundle () {
     .pipe(beautify({ indent_size: 2 })) // Beautify
     .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest(defaults.js.dest))
-    .pipe(gulpif(isProduction, uglify())) // Minify
-    .pipe(gulpif(isProduction, rename({ suffix: '.min' })))
-    // .pipe(sourcemaps.write('.'))
+    .pipe(connect.reload())
+
+  return bundle
+}
+
+function minifyJs () {
+  const uglify = require('gulp-uglify')
+  const bundle = gulp.src(defaults.js.output)
+    .pipe(sourcemaps.init())
+    .pipe(uglify()) // Minify
+    .pipe(rename({ suffix: '.min' }))
+    .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest(defaults.js.dest))
     .pipe(connect.reload())
 
@@ -163,9 +184,9 @@ function serve () {
 }
 
 function watch () {
-  gulp.watch([defaults.html.src], htmlBundle)
-  gulp.watch([defaults.css.src], cssBundle)
-  gulp.watch([defaults.js.src, defaults.js.root], jsBundle)
+  gulp.watch([defaults.html.src], buildHtml)
+  gulp.watch([defaults.css.src], buildCss)
+  gulp.watch([defaults.js.src, defaults.js.root], buildJs)
 }
 
 /**
@@ -174,27 +195,29 @@ function watch () {
 
 exports.default = gulp.series(
   cleanBuild,
-  gulp.parallel(cssLint, jsLint),
-  gulp.parallel(htmlBundle, cssBundle, jsBundle, fontsBundle, imagesBundle, faviconBundle),
+  gulp.parallel(lintCss, lintJs),
+  gulp.parallel(buildHtml, buildCss, buildJs, fontsBundle, imagesBundle, faviconBundle),
+  gulp.parallel(minifyHtml, minifyCss, minifyJs),
   cleanBundles
 )
 
 exports.build = gulp.series(
   cleanBuild,
-  gulp.parallel(cssLint, jsLint),
-  gulp.parallel(htmlBundle, cssBundle, jsBundle, fontsBundle, imagesBundle, faviconBundle),
+  gulp.parallel(lintCss, lintJs),
+  gulp.parallel(buildHtml, buildCss, buildJs, fontsBundle, imagesBundle, faviconBundle),
+  gulp.parallel(minifyHtml, minifyCss, minifyJs),
   cleanBundles
 )
 
 exports.develop = gulp.series(
   cleanBuild,
-  gulp.parallel(cssLint, jsLint),
-  gulp.parallel(htmlBundle, cssBundle, jsBundle, fontsBundle, imagesBundle, faviconBundle)
+  gulp.parallel(lintCss, lintJs),
+  gulp.parallel(buildHtml, buildCss, buildJs, fontsBundle, imagesBundle, faviconBundle)
 )
 
 exports.serve = gulp.series(
   cleanBuild,
-  gulp.parallel(cssLint, jsLint),
-  gulp.parallel(htmlBundle, cssBundle, jsBundle, fontsBundle, imagesBundle, faviconBundle),
+  gulp.parallel(lintCss, lintJs),
+  gulp.parallel(buildHtml, buildCss, buildJs, fontsBundle, imagesBundle, faviconBundle),
   gulp.parallel(serve, watch)
 )
