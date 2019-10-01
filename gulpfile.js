@@ -144,8 +144,8 @@ function minifyJs () {
   const bundle = gulp.src(defaults.js.output)
     .pipe(sourcemaps.init())
     .pipe(uglify()) // Minify
-    .pipe(rename({ suffix: '.min' }))
-    .pipe(sourcemaps.write('.'))
+    .pipe(rename({ suffix: '.min' })) // Rename
+    .pipe(sourcemaps.write('.')) // Maintain Sourcemaps
     .pipe(gulp.dest(defaults.js.dest))
     .pipe(connect.reload())
 
