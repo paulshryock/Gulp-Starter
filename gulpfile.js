@@ -1,6 +1,7 @@
 const gulp = require('gulp')
 const del = require('del')
 const gulpif = require('gulp-if')
+const sourcemaps = require('gulp-sourcemaps')
 const babel = require('gulp-babel')
 const concat = require('gulp-concat')
 const beautify = require('gulp-beautify')
@@ -45,8 +46,8 @@ function cleanBuild () {
   return clean
 }
 
-function cleanBundles (asset) {
-  const clean = del([defaults.css.bundle, defaults.js.bundle])
+function cleanBundles () {
+  const clean = del([defaults.css.bundle, `${defaults.css.bundle}.map`, defaults.js.bundle, `${defaults.js.bundle}.map`])
 
   return clean
 }
@@ -78,10 +79,8 @@ function cssLint () {
 }
 
 function cssBundle () {
-  // Using gulp-sourcemaps with native Gulp sourcemaps because PostCSS plugin cssnano seems to require gulp-sourcemaps in order to keep sourcemaps in the minified file.
-  const sourcemaps = require('gulp-sourcemaps')
   const postcss = require('gulp-postcss')
-  const bundle = gulp.src(defaults.css.src, { sourcemaps: true })
+  const bundle = gulp.src(defaults.css.src)
     .pipe(sourcemaps.init())
     .pipe(postcss([
       require('postcss-easy-import'), // @import files
@@ -92,13 +91,14 @@ function cssBundle () {
     ]))
     .pipe(concat('bundle.css')) // Concatenate and rename
     .pipe(beautify.css({ indent_size: 2 })) // Beautify
-    .pipe(gulp.dest(defaults.css.dest), { sourcemaps: true })
+    .pipe(sourcemaps.write('.'))
+    .pipe(gulp.dest(defaults.css.dest))
     .pipe(gulpif(isProduction, postcss([
       require('cssnano')
     ]))) // Minify
     .pipe(gulpif(isProduction, rename({ suffix: '.min' })))
-    .pipe(sourcemaps.write())
-    .pipe(gulp.dest(defaults.css.dest), { sourcemaps: true })
+    // .pipe(sourcemaps.write('.'))
+    .pipe(gulp.dest(defaults.css.dest))
     .pipe(connect.reload())
 
   return bundle
@@ -115,14 +115,17 @@ function jsLint () {
 
 function jsBundle () {
   const uglify = require('gulp-uglify')
-  const bundle = gulp.src(defaults.js.src, { sourcemaps: true })
+  const bundle = gulp.src(defaults.js.src)
+    .pipe(sourcemaps.init())
     .pipe(concat('bundle.js')) // Concatenate and rename
     .pipe(babel()) // Compile ECMAScript 2015+ into a backwards compatible version of JavaScript
     .pipe(beautify({ indent_size: 2 })) // Beautify
-    .pipe(gulp.dest(defaults.js.dest, { sourcemaps: true }))
+    .pipe(sourcemaps.write('.'))
+    .pipe(gulp.dest(defaults.js.dest))
     .pipe(gulpif(isProduction, uglify())) // Minify
     .pipe(gulpif(isProduction, rename({ suffix: '.min' })))
-    .pipe(gulp.dest(defaults.js.dest, { sourcemaps: true }))
+    // .pipe(sourcemaps.write('.'))
+    .pipe(gulp.dest(defaults.js.dest))
     .pipe(connect.reload())
 
   return bundle
