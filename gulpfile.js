@@ -1,14 +1,18 @@
 const gulp = require('gulp')
 const del = require('del')
+const htmlmin = require('gulp-htmlmin')
+const gulpStylelint = require('gulp-stylelint')
 const sourcemaps = require('gulp-sourcemaps')
 const postcss = require('gulp-postcss')
+const standard = require('gulp-standard')
 const babel = require('gulp-babel')
 const concat = require('gulp-concat')
 const beautify = require('gulp-beautify')
+const uglify = require('gulp-uglify')
 const rename = require('gulp-rename')
 const connect = require('gulp-connect')
 
-const defaults = {
+const paths = {
   html: {
     src: './src/*.html',
     dest: './build',
@@ -39,138 +43,148 @@ const defaults = {
   }
 }
 
-function cleanBuild () {
-  const clean = del([defaults.html.dest])
+function startTimer (cb) {
+  console.time('Build process')
 
-  return clean
+  return cb()
 }
 
-function cleanBundles () {
-  const clean = del([defaults.css.output, `${defaults.css.output}.map`, defaults.js.output, `${defaults.js.output}.map`])
+function endTimer (cb) {
+  console.timeEnd('Build process')
 
-  return clean
+  return cb()
 }
 
-function buildHtml () {
-  const bundle = gulp.src(defaults.html.src)
+function clean (cb) {
+  del([paths.html.dest])
+
+  return cb()
+}
+
+function buildHtml (cb) {
+  gulp.src(paths.html.src)
     .pipe(beautify.html({ indent_size: 2 })) // Beautify
-    .pipe(gulp.dest(defaults.html.dest))
+    .pipe(gulp.dest(paths.html.dest))
     .pipe(connect.reload())
 
-  return bundle
+  return cb()
 }
 
-function minifyHtml () {
-  const htmlmin = require('gulp-htmlmin')
-  const bundle = gulp.src(defaults.html.output)
+function minifyHtml (cb) {
+  gulp.src(paths.html.output)
     .pipe(htmlmin({ collapseWhitespace: true })) // Minify
-    .pipe(gulp.dest(defaults.html.dest))
+    .pipe(gulp.dest(paths.html.dest))
     .pipe(connect.reload())
 
-  return bundle
+  return cb()
 }
 
-function lintCss () {
-  const gulpStylelint = require('gulp-stylelint')
-  const lint = gulp.src(defaults.css.src)
-    .pipe(gulpStylelint({
-      config: {
-        extends: ['stylelint-config-standard']
-      },
-      fix: true,
-      reporters: [
-        { formatter: 'string', console: true }
-      ]
-    }))
+function lintCss (cb) {
+  const settings = {
+    config: {
+      extends: ['stylelint-config-standard']
+    },
+    fix: true,
+    reporters: [
+      { formatter: 'string', console: true }
+    ]
+  }
 
-  return lint
+  gulp.src(paths.css.src)
+    .pipe(gulpStylelint(settings)) // Lint
+
+  return cb()
 }
 
-function buildCss () {
-  const bundle = gulp.src(defaults.css.src)
+function buildCss (cb) {
+  const plugins = [
+    require('postcss-easy-import'), // @import files
+    require('precss'), // Transpile Sass-like syntax
+    require('postcss-preset-env'), // Polyfill modern CSS
+    require('autoprefixer'), // Add vendor prefixes
+    require('pixrem')() // Add fallbacks for rem units
+  ]
+
+  gulp.src(paths.css.src)
     .pipe(sourcemaps.init())
-    .pipe(postcss([
-      require('postcss-easy-import'), // @import files
-      require('precss'), // Transpile Sass-like syntax
-      require('postcss-preset-env'), // Polyfill modern CSS
-      require('autoprefixer'), // Add vendor prefixes
-      require('pixrem')() // Add fallbacks for rem units
-    ]))
+    .pipe(postcss(plugins)) // Process CSS
     .pipe(concat('bundle.css')) // Concatenate and rename
     .pipe(beautify.css({ indent_size: 2 })) // Beautify
     .pipe(sourcemaps.write('.')) // Maintain Sourcemaps
-    .pipe(gulp.dest(defaults.css.dest))
+    .pipe(gulp.dest(paths.css.dest))
     .pipe(connect.reload())
 
-  return bundle
+  return cb()
 }
 
-function minifyCss () {
-  const bundle = gulp.src(defaults.css.output)
+function minifyCss (cb) {
+  gulp.src(paths.css.output)
     .pipe(sourcemaps.init())
-    .pipe(postcss([ require('cssnano') ])) // Minify
+    .pipe(postcss([require('cssnano')])) // Minify
     .pipe(rename({ suffix: '.min' })) // Rename
-    .pipe(sourcemaps.write('.')) // Maintain Sourcemaps
-    .pipe(gulp.dest(defaults.css.dest))
+    .pipe(sourcemaps.write('.'))
+    .pipe(gulp.dest(paths.css.dest))
     .pipe(connect.reload())
 
-  return bundle
+  del([paths.css.output, `${paths.css.output}.map`])
+
+  return cb()
 }
 
 function lintJs () {
-  const standard = require('gulp-standard')
-  const lint = gulp.src([defaults.js.src, defaults.js.root])
-    .pipe(standard({ fix: true }))
+  const lint = gulp.src([paths.js.src, paths.js.root])
+    .pipe(standard({ fix: true })) // Lint
     .pipe(standard.reporter('default'))
 
   return lint
 }
 
-function buildJs () {
-  const bundle = gulp.src(defaults.js.src)
+function buildJs (cb) {
+  gulp.src(paths.js.src)
     .pipe(sourcemaps.init())
     .pipe(concat('bundle.js')) // Concatenate and rename
     .pipe(babel()) // Compile ECMAScript 2015+ into a backwards compatible version of JavaScript
     .pipe(beautify({ indent_size: 2 })) // Beautify
     .pipe(sourcemaps.write('.'))
-    .pipe(gulp.dest(defaults.js.dest))
+    .pipe(gulp.dest(paths.js.dest))
     .pipe(connect.reload())
 
-  return bundle
+  return cb()
 }
 
-function minifyJs () {
-  const uglify = require('gulp-uglify')
-  const bundle = gulp.src(defaults.js.output)
+function minifyJs (cb) {
+  gulp.src(paths.js.output)
     .pipe(sourcemaps.init())
     .pipe(uglify()) // Minify
     .pipe(rename({ suffix: '.min' })) // Rename
-    .pipe(sourcemaps.write('.')) // Maintain Sourcemaps
-    .pipe(gulp.dest(defaults.js.dest))
+    .pipe(sourcemaps.write('.'))
+    .pipe(gulp.dest(paths.js.dest))
     .pipe(connect.reload())
 
-  return bundle
+  del([paths.js.output, `${paths.js.output}.map`])
+
+  return cb()
 }
 
 function fontsBundle () {
-  const bundle = gulp.src(defaults.fonts.src)
-    .pipe(gulp.dest(defaults.fonts.dest))
+  const bundle = gulp.src(paths.fonts.src)
+    .pipe(gulp.dest(paths.fonts.dest)) // Copy fonts
     .pipe(connect.reload())
 
   return bundle
 }
 
 function imagesBundle () {
-  const bundle = gulp.src(defaults.images.src)
-    .pipe(gulp.dest(defaults.images.dest))
+  const bundle = gulp.src(paths.images.src)
+    .pipe(gulp.dest(paths.images.dest)) // Copy images
     .pipe(connect.reload())
 
   return bundle
 }
 
 function faviconBundle () {
-  const bundle = gulp.src(defaults.favicon.src)
-    .pipe(gulp.dest(defaults.favicon.dest))
+  const bundle = gulp.src(paths.favicon.src)
+    .pipe(gulp.dest(paths.favicon.dest)) // Copy favicons
     .pipe(connect.reload())
 
   return bundle
@@ -178,15 +192,15 @@ function faviconBundle () {
 
 function serve () {
   connect.server({
-    root: defaults.html.dest,
+    root: paths.html.dest,
     livereload: true
   })
 }
 
 function watch () {
-  gulp.watch([defaults.html.src], buildHtml)
-  gulp.watch([defaults.css.src], buildCss)
-  gulp.watch([defaults.js.src, defaults.js.root], buildJs)
+  gulp.watch([paths.html.src], buildHtml)
+  gulp.watch([paths.css.src], buildCss)
+  gulp.watch([paths.js.src, paths.js.root], buildJs)
 }
 
 /**
@@ -194,30 +208,36 @@ function watch () {
  */
 
 exports.default = gulp.series(
-  cleanBuild,
+  startTimer,
+  clean,
   gulp.parallel(lintCss, lintJs),
   gulp.parallel(buildHtml, buildCss, buildJs, fontsBundle, imagesBundle, faviconBundle),
   gulp.parallel(minifyHtml, minifyCss, minifyJs),
-  cleanBundles
+  endTimer
 )
 
 exports.build = gulp.series(
-  cleanBuild,
+  startTimer,
+  clean,
   gulp.parallel(lintCss, lintJs),
   gulp.parallel(buildHtml, buildCss, buildJs, fontsBundle, imagesBundle, faviconBundle),
   gulp.parallel(minifyHtml, minifyCss, minifyJs),
-  cleanBundles
+  endTimer
 )
 
 exports.develop = gulp.series(
-  cleanBuild,
+  startTimer,
+  clean,
   gulp.parallel(lintCss, lintJs),
-  gulp.parallel(buildHtml, buildCss, buildJs, fontsBundle, imagesBundle, faviconBundle)
+  gulp.parallel(buildHtml, buildCss, buildJs, fontsBundle, imagesBundle, faviconBundle),
+  endTimer
 )
 
 exports.serve = gulp.series(
-  cleanBuild,
+  startTimer,
+  clean,
   gulp.parallel(lintCss, lintJs),
   gulp.parallel(buildHtml, buildCss, buildJs, fontsBundle, imagesBundle, faviconBundle),
+  endTimer,
   gulp.parallel(serve, watch)
 )
