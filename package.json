@@ -1,6 +1,6 @@
 {
   "name": "Gulp-Starter",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Fork this repository to start a new project with Gulp, Babel, PostCSS, and the following workflow: linting, Sass and modern CSS transpiling, ES2015+ compiling, concatenation, minification, beautification, source maps, bundling fonts, images, and favicons, serving files, watching for changes, and live reloading.",
   "keywords": [
     "gulp",

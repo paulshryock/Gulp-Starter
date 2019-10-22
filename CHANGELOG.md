@@ -15,6 +15,14 @@ and this project adheres to [Semantic Versioning](semver).
 ### Security
 -->
 
+## 1.1.0 - 2019-10-22 - Callbacks
+
+### Added
+- Add callbacks
+
+### Changed
+- Rename paths object
+
 ## 1.0.0 - 2019-10-01 - Initial release
 
 ### Added
