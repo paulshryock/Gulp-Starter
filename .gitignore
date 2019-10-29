@@ -2,10 +2,12 @@
 node_modules/
 package-lock.json
 
+# Private
+.env
+
 # Temp files
 build/
 dist/
-.sass-cache/
 
 # OS files
 .DS_Store
