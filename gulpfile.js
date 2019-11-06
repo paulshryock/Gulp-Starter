@@ -66,11 +66,17 @@ function html () {
   }
 
   const html = gulp.src(paths.html.src)
+    .pipe(gulp.dest(paths.html.dest))
+    .pipe(connect.reload())
+
+  const beaut = gulp.src(paths.html.output)
     .pipe(beautify.html(options)) // Beautify
     .pipe(gulp.dest(paths.html.dest))
     .pipe(connect.reload())
 
-  return html
+  const merged = merge(html, beaut)
+
+  return merged.isEmpty() ? null : merged
 }
 
 function css () {
