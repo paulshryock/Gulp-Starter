@@ -61,5 +61,11 @@
   },
   "dependencies": {
     "config": "^3.2.4"
-  }
+  },
+  "browserslist": [
+    "last 3 versions",
+    "> 1%",
+    "maintained node versions",
+    "not dead"
+  ]
 }

@@ -114,8 +114,7 @@ function js () {
     // Webpack configuration
     mode: isProduction ? 'production' : 'development',
     entry: {
-      bundle: paths.js.entry.index,
-      cms: paths.js.entry.cms
+      bundle: paths.js.entry.index
     },
     output: {
       path: path.resolve(__dirname, 'build/js'),
@@ -252,8 +251,7 @@ function serve (cb) {
   gulp.watch([
     paths.fonts.src,
     paths.favicon.src,
-    paths.images.src,
-    paths.cms.src
+    paths.images.src
   ], assets)
 
   cb()
